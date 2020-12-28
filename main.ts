@@ -11,10 +11,56 @@ bluetooth.onBluetoothConnected(function () {
         // serial.writeString(rec_data)
         // serial.writeLine("")
         // serial.writeValue("status", connected)
-        send_data = "###" + rec_data.slice(0, rec_data.length - 1) + "###"
-        bluetooth.uartWriteLine(send_data)
-        basic.pause(300)
+        send_data = "#" + rec_data.slice(0, rec_data.length - 1) + "#"
+        if (rec_data.indexOf("F") == 0) {
+            basic.showLeds(`
+                . . # . .
+                . # # # .
+                # # # # #
+                . . # . .
+                . . # . .
+                `)
+        } else if (rec_data.indexOf("B") == 0) {
+            basic.showLeds(`
+                . . # . .
+                . . # . .
+                # # # # #
+                . # # # .
+                . . # . .
+                `)
+        } else if (rec_data.indexOf("L") == 0) {
+            basic.showLeds(`
+                . . # . .
+                . # # . .
+                # # # # #
+                . # # . .
+                . . # . .
+                `)
+        } else if (rec_data.indexOf("R") == 0) {
+            basic.showLeds(`
+                . . # . .
+                . . # # .
+                # # # # #
+                . . # # .
+                . . # . .
+                `)
+        } else if (rec_data.indexOf("S") == 0) {
+            basic.showLeds(`
+                . # # # #
+                # . . . .
+                . # # # .
+                . . . . #
+                # # # # .
+                `)
+        } else if (rec_data.indexOf("L_ON") == 0) {
+            basic.showString(rec_data)
+            soundExpression.spring.play()
+        } else {
+            basic.showString(rec_data)
+        }
     }
+    bluetooth.uartWriteLine(send_data)
+    basic.pause(300)
 })
 bluetooth.onBluetoothDisconnected(function () {
     basic.showIcon(IconNames.Sad)
@@ -47,6 +93,8 @@ basic.showLeds(`
     . . . . .
     `)
 basic.pause(200)
+music.setBuiltInSpeakerEnabled(true)
+music.setVolume(127)
 basic.clearScreen()
 // serial.redirectToUSB()
 basic.forever(function () {
