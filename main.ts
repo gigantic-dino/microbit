@@ -1,43 +1,39 @@
-bluetooth.onBluetoothConnected(function on_bluetooth_connected() {
-    
+bluetooth.onBluetoothConnected(function () {
     basic.showIcon(IconNames.Heart)
-    basic.pause(200)
-    bluetooth.uartWriteLine("Microbit connected")
     connected = 1
-    while (connected == 1) {
+    while (connected != 0) {
+        if (connected == 1) {
+            basic.pause(800)
+            connected += 1
+            bluetooth.uartWriteLine("Microbit connected")
+        }
         rec_data = bluetooth.uartReadUntil(serial.delimiters(Delimiters.NewLine))
-        //  serial.writeString(rec_data)
-        //  serial.writeLine("")
-        //  serial.writeValue("status", connected)
-        send_data = "Received ###" + rec_data.slice(0, rec_data.length - 1) + "###"
+        // serial.writeString(rec_data)
+        // serial.writeLine("")
+        // serial.writeValue("status", connected)
+        send_data = "###" + rec_data.slice(0, rec_data.length - 1) + "###"
         bluetooth.uartWriteLine(send_data)
-        basic.pause(100)
+        basic.pause(300)
     }
 })
-bluetooth.onBluetoothDisconnected(function on_bluetooth_disconnected() {
-    
+bluetooth.onBluetoothDisconnected(function () {
     basic.showIcon(IconNames.Sad)
     connected = 0
 })
-input.onButtonPressed(Button.A, function on_button_pressed_a() {
+input.onButtonPressed(Button.A, function () {
     if (connected != 0) {
         bluetooth.uartWriteLine("Button A pressed")
     }
-    
-})
-/** serial.redirectToUSB() */
-basic.forever(function on_forever() {
-    basic.pause(100)
 })
 let send_data = ""
-let rec_data = ""
 let connected = 0
-//  bluetooth.startAccelerometerService()
-//  bluetooth.startButtonService()
-//  bluetooth.startIOPinService()
-//  bluetooth.startLEDService()
-//  bluetooth.startTemperatureService()
-//  bluetooth.startMagnetometerService()
+let rec_data = ""
+// bluetooth.startAccelerometerService()
+// bluetooth.startButtonService()
+// bluetooth.startIOPinService()
+// bluetooth.startLEDService()
+// bluetooth.startTemperatureService()
+// bluetooth.startMagnetometerService()
 bluetooth.startUartService()
 basic.showIcon(IconNames.Square)
 basic.pause(200)
@@ -52,3 +48,7 @@ basic.showLeds(`
     `)
 basic.pause(200)
 basic.clearScreen()
+// serial.redirectToUSB()
+basic.forever(function () {
+    basic.pause(100)
+})
